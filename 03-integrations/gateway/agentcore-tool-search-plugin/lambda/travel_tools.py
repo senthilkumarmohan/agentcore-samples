@@ -42,8 +42,10 @@ def lambda_handler(event, context):
     # Extract tool name from context (format: targetName___toolName)
     tool_name = ""
     try:
-        original_tool_name = context.client_context.custom['bedrockAgentCoreToolName']
-        tool_name = original_tool_name[original_tool_name.index(DELIMITER) + len(DELIMITER):]
+        original_tool_name = context.client_context.custom["bedrockAgentCoreToolName"]
+        tool_name = original_tool_name[
+            original_tool_name.index(DELIMITER) + len(DELIMITER) :
+        ]
     except (AttributeError, KeyError, ValueError):
         # Fallback: check if tool_name is passed directly in event (for local testing)
         tool_name = event.pop("tool_name", "")
@@ -57,7 +59,7 @@ def lambda_handler(event, context):
     if handler is None:
         return {
             "error": f"Unknown tool: {tool_name}",
-            "available_tools": list(TOOL_DISPATCH.keys())
+            "available_tools": list(TOOL_DISPATCH.keys()),
         }
 
     result = handler(arguments)
@@ -67,6 +69,7 @@ def lambda_handler(event, context):
 # =============================================================================
 # FLIGHTS DOMAIN (9 tools)
 # =============================================================================
+
 
 def search_flights(args):
     """Search for available flights based on origin, destination, and date."""
@@ -87,7 +90,7 @@ def search_flights(args):
                 "price": 349.99,
                 "currency": "USD",
                 "class": "Economy",
-                "stops": 0
+                "stops": 0,
             },
             {
                 "flight_id": "FL-202",
@@ -100,7 +103,7 @@ def search_flights(args):
                 "price": 289.50,
                 "currency": "USD",
                 "class": "Economy",
-                "stops": 0
+                "stops": 0,
             },
             {
                 "flight_id": "FL-203",
@@ -113,11 +116,11 @@ def search_flights(args):
                 "price": 415.00,
                 "currency": "USD",
                 "class": "Business",
-                "stops": 0
-            }
+                "stops": 0,
+            },
         ],
         "total_results": 3,
-        "search_criteria": {"origin": origin, "destination": destination, "date": date}
+        "search_criteria": {"origin": origin, "destination": destination, "date": date},
     }
 
 
@@ -129,15 +132,28 @@ def get_flight_details(args):
         "flight_id": flight_id,
         "airline": "SkyWest Airlines",
         "flight_number": "SW-1042",
-        "origin": {"code": "SFO", "name": "San Francisco International", "terminal": "2"},
-        "destination": {"code": "JFK", "name": "John F. Kennedy International", "terminal": "4"},
+        "origin": {
+            "code": "SFO",
+            "name": "San Francisco International",
+            "terminal": "2",
+        },
+        "destination": {
+            "code": "JFK",
+            "name": "John F. Kennedy International",
+            "terminal": "4",
+        },
         "departure_time": "2025-03-15T08:00:00",
         "arrival_time": "2025-03-15T16:30:00",
         "duration": "5h 30m",
         "aircraft": "Boeing 737-800",
-        "amenities": ["Wi-Fi", "In-flight entertainment", "USB charging", "Complimentary snacks"],
+        "amenities": [
+            "Wi-Fi",
+            "In-flight entertainment",
+            "USB charging",
+            "Complimentary snacks",
+        ],
         "price": {"economy": 349.99, "business": 799.99, "first": 1249.99},
-        "currency": "USD"
+        "currency": "USD",
     }
 
 
@@ -154,7 +170,7 @@ def check_availability(args):
         "availability_status": "available",
         "fare": 349.99,
         "currency": "USD",
-        "last_updated": "2025-03-10T12:00:00Z"
+        "last_updated": "2025-03-10T12:00:00Z",
     }
 
 
@@ -171,25 +187,25 @@ def get_seat_map(args):
                 "rows": "1-4",
                 "seats_per_row": 4,
                 "layout": "2-2",
-                "available": 3
+                "available": 3,
             },
             {
                 "class": "Business",
                 "rows": "5-10",
                 "seats_per_row": 6,
                 "layout": "3-3",
-                "available": 12
+                "available": 12,
             },
             {
                 "class": "Economy",
                 "rows": "11-35",
                 "seats_per_row": 6,
                 "layout": "3-3",
-                "available": 42
-            }
+                "available": 42,
+            },
         ],
         "exit_rows": [12, 22],
-        "extra_legroom_rows": [12, 13, 22, 23]
+        "extra_legroom_rows": [12, 13, 22, 23],
     }
 
 
@@ -203,22 +219,22 @@ def get_baggage_policy(args):
             "allowed": True,
             "max_weight_kg": 10,
             "max_dimensions_cm": "55x40x20",
-            "personal_item": True
+            "personal_item": True,
         },
         "checked_baggage": {
             "first_bag_fee": 30.00,
             "second_bag_fee": 45.00,
             "max_weight_kg": 23,
-            "max_dimensions_cm": "158 linear cm"
+            "max_dimensions_cm": "158 linear cm",
         },
         "overweight_fee": 100.00,
         "oversize_fee": 150.00,
         "special_items": {
             "sports_equipment": 75.00,
             "musical_instruments": "Carry-on or purchased seat",
-            "pets": 125.00
+            "pets": 125.00,
         },
-        "currency": "USD"
+        "currency": "USD",
     }
 
 
@@ -235,16 +251,16 @@ def get_flight_status(args):
             "scheduled": "2025-03-15T08:00:00",
             "estimated": "2025-03-15T08:00:00",
             "gate": "B22",
-            "terminal": "2"
+            "terminal": "2",
         },
         "arrival": {
             "airport": "JFK",
             "scheduled": "2025-03-15T16:30:00",
             "estimated": "2025-03-15T16:25:00",
             "gate": "A15",
-            "terminal": "4"
+            "terminal": "4",
         },
-        "last_updated": "2025-03-15T07:30:00Z"
+        "last_updated": "2025-03-15T07:30:00Z",
     }
 
 
@@ -267,7 +283,7 @@ def search_connecting_flights(args):
                         "destination": "New York (JFK)",
                         "departure": f"{date}T06:00:00",
                         "arrival": f"{date}T14:30:00",
-                        "airline": "SkyWest Airlines"
+                        "airline": "SkyWest Airlines",
                     },
                     {
                         "flight_id": "FL-302",
@@ -275,10 +291,10 @@ def search_connecting_flights(args):
                         "destination": destination,
                         "departure": f"{date}T17:00:00",
                         "arrival": "2025-03-16T05:45:00",
-                        "airline": "Atlantic Airways"
-                    }
+                        "airline": "Atlantic Airways",
+                    },
                 ],
-                "layover": "2h 30m at JFK"
+                "layover": "2h 30m at JFK",
             },
             {
                 "route_id": "RT-102",
@@ -291,7 +307,7 @@ def search_connecting_flights(args):
                         "destination": "Chicago (ORD)",
                         "departure": f"{date}T07:30:00",
                         "arrival": f"{date}T13:30:00",
-                        "airline": "Continental Express"
+                        "airline": "Continental Express",
                     },
                     {
                         "flight_id": "FL-304",
@@ -299,14 +315,14 @@ def search_connecting_flights(args):
                         "destination": destination,
                         "departure": f"{date}T15:00:00",
                         "arrival": "2025-03-16T04:50:00",
-                        "airline": "Atlantic Airways"
-                    }
+                        "airline": "Atlantic Airways",
+                    },
                 ],
-                "layover": "1h 30m at ORD"
-            }
+                "layover": "1h 30m at ORD",
+            },
         ],
         "search_criteria": {"origin": origin, "destination": destination, "date": date},
-        "currency": "USD"
+        "currency": "USD",
     }
 
 
@@ -325,7 +341,7 @@ def get_airline_info(args):
             "founded": 1972,
             "website": "https://www.skywest-example.com",
             "rating": 4.2,
-            "on_time_performance": "82%"
+            "on_time_performance": "82%",
         },
         "Pacific Air": {
             "name": "Pacific Air",
@@ -337,22 +353,25 @@ def get_airline_info(args):
             "founded": 1985,
             "website": "https://www.pacificair-example.com",
             "rating": 4.0,
-            "on_time_performance": "79%"
-        }
+            "on_time_performance": "79%",
+        },
     }
 
-    return airlines_data.get(airline, {
-        "name": airline,
-        "code": "XX",
-        "country": "Unknown",
-        "hub_airports": [],
-        "alliance": "Independent",
-        "fleet_size": 0,
-        "founded": None,
-        "website": None,
-        "rating": None,
-        "on_time_performance": "N/A"
-    })
+    return airlines_data.get(
+        airline,
+        {
+            "name": airline,
+            "code": "XX",
+            "country": "Unknown",
+            "hub_airports": [],
+            "alliance": "Independent",
+            "fleet_size": 0,
+            "founded": None,
+            "website": None,
+            "rating": None,
+            "on_time_performance": "N/A",
+        },
+    )
 
 
 def compare_flight_prices(args):
@@ -364,20 +383,45 @@ def compare_flight_prices(args):
     return {
         "route": {"origin": origin, "destination": destination, "date": date},
         "comparisons": [
-            {"airline": "Pacific Air", "price": 289.50, "class": "Economy", "duration": "5h 15m", "stops": 0},
-            {"airline": "SkyWest Airlines", "price": 349.99, "class": "Economy", "duration": "5h 30m", "stops": 0},
-            {"airline": "Continental Express", "price": 415.00, "class": "Business", "duration": "5h 30m", "stops": 0},
-            {"airline": "Budget Wings", "price": 199.99, "class": "Economy", "duration": "7h 45m", "stops": 1}
+            {
+                "airline": "Pacific Air",
+                "price": 289.50,
+                "class": "Economy",
+                "duration": "5h 15m",
+                "stops": 0,
+            },
+            {
+                "airline": "SkyWest Airlines",
+                "price": 349.99,
+                "class": "Economy",
+                "duration": "5h 30m",
+                "stops": 0,
+            },
+            {
+                "airline": "Continental Express",
+                "price": 415.00,
+                "class": "Business",
+                "duration": "5h 30m",
+                "stops": 0,
+            },
+            {
+                "airline": "Budget Wings",
+                "price": 199.99,
+                "class": "Economy",
+                "duration": "7h 45m",
+                "stops": 1,
+            },
         ],
         "cheapest": {"airline": "Budget Wings", "price": 199.99},
         "fastest": {"airline": "Pacific Air", "duration": "5h 15m"},
-        "currency": "USD"
+        "currency": "USD",
     }
 
 
 # =============================================================================
 # HOTELS DOMAIN (4 tools)
 # =============================================================================
+
 
 def search_hotels(args):
     """Search for hotels in a specified location."""
@@ -397,7 +441,7 @@ def search_hotels(args):
                 "price_per_night": 259.00,
                 "total_price": 777.00,
                 "amenities": ["Pool", "Gym", "Spa", "Restaurant", "Free Wi-Fi"],
-                "distance_to_center": "0.3 miles"
+                "distance_to_center": "0.3 miles",
             },
             {
                 "hotel_id": "HT-102",
@@ -408,7 +452,7 @@ def search_hotels(args):
                 "price_per_night": 189.00,
                 "total_price": 567.00,
                 "amenities": ["Gym", "Restaurant", "Free Wi-Fi", "Business Center"],
-                "distance_to_center": "0.8 miles"
+                "distance_to_center": "0.8 miles",
             },
             {
                 "hotel_id": "HT-103",
@@ -418,18 +462,26 @@ def search_hotels(args):
                 "stars": 5,
                 "price_per_night": 499.00,
                 "total_price": 1497.00,
-                "amenities": ["Pool", "Gym", "Spa", "Restaurant", "Rooftop Bar", "Concierge", "Free Wi-Fi"],
-                "distance_to_center": "0.1 miles"
-            }
+                "amenities": [
+                    "Pool",
+                    "Gym",
+                    "Spa",
+                    "Restaurant",
+                    "Rooftop Bar",
+                    "Concierge",
+                    "Free Wi-Fi",
+                ],
+                "distance_to_center": "0.1 miles",
+            },
         ],
         "total_results": 3,
         "search_criteria": {
             "location": location,
             "check_in": check_in,
             "check_out": check_out,
-            "guests": guests
+            "guests": guests,
         },
-        "currency": "USD"
+        "currency": "USD",
     }
 
 
@@ -449,16 +501,30 @@ def get_hotel_details(args):
         "check_out_time": "11:00",
         "room_types": [
             {"type": "Standard", "price": 259.00, "max_guests": 2, "beds": "1 King"},
-            {"type": "Deluxe", "price": 349.00, "max_guests": 3, "beds": "1 King + 1 Sofa"},
-            {"type": "Suite", "price": 549.00, "max_guests": 4, "beds": "2 Kings"}
+            {
+                "type": "Deluxe",
+                "price": 349.00,
+                "max_guests": 3,
+                "beds": "1 King + 1 Sofa",
+            },
+            {"type": "Suite", "price": 549.00, "max_guests": 4, "beds": "2 Kings"},
         ],
-        "amenities": ["Pool", "Gym", "Spa", "Restaurant", "Bar", "Free Wi-Fi", "Parking", "Concierge"],
+        "amenities": [
+            "Pool",
+            "Gym",
+            "Spa",
+            "Restaurant",
+            "Bar",
+            "Free Wi-Fi",
+            "Parking",
+            "Concierge",
+        ],
         "policies": {
             "cancellation": "Free cancellation up to 24 hours before check-in",
             "pets": "Pets allowed ($50/night fee)",
-            "smoking": "Non-smoking property"
+            "smoking": "Non-smoking property",
         },
-        "currency": "USD"
+        "currency": "USD",
     }
 
 
@@ -480,7 +546,7 @@ def check_room_availability(args):
         "total_price": 777.00,
         "nights": 3,
         "includes_breakfast": True,
-        "currency": "USD"
+        "currency": "USD",
     }
 
 
@@ -491,22 +557,44 @@ def get_hotel_amenities(args):
     return {
         "hotel_id": hotel_id,
         "amenities": {
-            "pool": {"available": True, "type": "Indoor heated", "hours": "6:00 AM - 10:00 PM"},
-            "gym": {"available": True, "hours": "24/7", "equipment": ["Treadmills", "Weights", "Yoga studio"]},
-            "spa": {"available": True, "hours": "9:00 AM - 8:00 PM", "services": ["Massage", "Facial", "Sauna"]},
-            "restaurant": {"available": True, "name": "The Park Grill", "cuisine": "American", "hours": "6:30 AM - 11:00 PM"},
+            "pool": {
+                "available": True,
+                "type": "Indoor heated",
+                "hours": "6:00 AM - 10:00 PM",
+            },
+            "gym": {
+                "available": True,
+                "hours": "24/7",
+                "equipment": ["Treadmills", "Weights", "Yoga studio"],
+            },
+            "spa": {
+                "available": True,
+                "hours": "9:00 AM - 8:00 PM",
+                "services": ["Massage", "Facial", "Sauna"],
+            },
+            "restaurant": {
+                "available": True,
+                "name": "The Park Grill",
+                "cuisine": "American",
+                "hours": "6:30 AM - 11:00 PM",
+            },
             "wifi": {"available": True, "free": True, "speed": "100 Mbps"},
             "parking": {"available": True, "type": "Valet", "price_per_day": 45.00},
-            "business_center": {"available": True, "hours": "24/7", "services": ["Printing", "Meeting rooms"]},
-            "concierge": {"available": True, "hours": "24/7"}
+            "business_center": {
+                "available": True,
+                "hours": "24/7",
+                "services": ["Printing", "Meeting rooms"],
+            },
+            "concierge": {"available": True, "hours": "24/7"},
         },
-        "currency": "USD"
+        "currency": "USD",
     }
 
 
 # =============================================================================
 # CAR RENTALS DOMAIN (3 tools)
 # =============================================================================
+
 
 def search_car_rentals(args):
     """Search for available car rentals at a location."""
@@ -524,7 +612,7 @@ def search_car_rentals(args):
                 "price_per_day": 45.00,
                 "total_price": 135.00,
                 "features": ["Automatic", "A/C", "4 seats", "2 bags"],
-                "pickup_location": location
+                "pickup_location": location,
             },
             {
                 "rental_id": "CR-102",
@@ -534,7 +622,7 @@ def search_car_rentals(args):
                 "price_per_day": 85.00,
                 "total_price": 255.00,
                 "features": ["Automatic", "A/C", "7 seats", "4 bags", "GPS"],
-                "pickup_location": location
+                "pickup_location": location,
             },
             {
                 "rental_id": "CR-103",
@@ -543,17 +631,24 @@ def search_car_rentals(args):
                 "model": "BMW 5 Series",
                 "price_per_day": 150.00,
                 "total_price": 450.00,
-                "features": ["Automatic", "A/C", "5 seats", "3 bags", "GPS", "Leather seats"],
-                "pickup_location": location
-            }
+                "features": [
+                    "Automatic",
+                    "A/C",
+                    "5 seats",
+                    "3 bags",
+                    "GPS",
+                    "Leather seats",
+                ],
+                "pickup_location": location,
+            },
         ],
         "total_results": 3,
         "search_criteria": {
             "location": location,
             "pickup_date": pickup_date,
-            "return_date": return_date
+            "return_date": return_date,
         },
-        "currency": "USD"
+        "currency": "USD",
     }
 
 
@@ -568,18 +663,35 @@ def get_rental_details(args):
         "model": "Toyota Corolla",
         "year": 2024,
         "color": "Silver",
-        "features": ["Automatic transmission", "Air conditioning", "Bluetooth", "USB charging", "Backup camera"],
+        "features": [
+            "Automatic transmission",
+            "Air conditioning",
+            "Bluetooth",
+            "USB charging",
+            "Backup camera",
+        ],
         "capacity": {"passengers": 4, "bags_large": 1, "bags_small": 2},
         "fuel_policy": "Full-to-full",
         "mileage": "Unlimited",
         "insurance_options": [
             {"type": "Basic", "price_per_day": 15.00, "coverage": "Liability only"},
-            {"type": "Full", "price_per_day": 30.00, "coverage": "Comprehensive + collision"}
+            {
+                "type": "Full",
+                "price_per_day": 30.00,
+                "coverage": "Comprehensive + collision",
+            },
         ],
-        "pickup_location": {"address": "JFK Airport, Terminal 4, Level 1", "hours": "24/7"},
-        "requirements": {"min_age": 21, "license": "Valid driver's license", "deposit": 200.00},
+        "pickup_location": {
+            "address": "JFK Airport, Terminal 4, Level 1",
+            "hours": "24/7",
+        },
+        "requirements": {
+            "min_age": 21,
+            "license": "Valid driver's license",
+            "deposit": 200.00,
+        },
         "price_per_day": 45.00,
-        "currency": "USD"
+        "currency": "USD",
     }
 
 
@@ -598,14 +710,19 @@ def check_car_availability(args):
         "price_per_day": 45.00,
         "total_days": 3,
         "total_price": 135.00,
-        "extras_available": ["GPS ($10/day)", "Child seat ($8/day)", "Additional driver ($12/day)"],
-        "currency": "USD"
+        "extras_available": [
+            "GPS ($10/day)",
+            "Child seat ($8/day)",
+            "Additional driver ($12/day)",
+        ],
+        "currency": "USD",
     }
 
 
 # =============================================================================
 # RESTAURANTS DOMAIN (5 tools)
 # =============================================================================
+
 
 def search_restaurants(args):
     """Search for restaurants in a specified area."""
@@ -622,7 +739,7 @@ def search_restaurants(args):
                 "rating": 4.6,
                 "price_range": "$$$",
                 "distance": "0.2 miles",
-                "open_now": True
+                "open_now": True,
             },
             {
                 "restaurant_id": "RS-102",
@@ -632,7 +749,7 @@ def search_restaurants(args):
                 "rating": 4.3,
                 "price_range": "$$",
                 "distance": "0.5 miles",
-                "open_now": True
+                "open_now": True,
             },
             {
                 "restaurant_id": "RS-103",
@@ -642,11 +759,11 @@ def search_restaurants(args):
                 "rating": 4.8,
                 "price_range": "$$$$",
                 "distance": "0.7 miles",
-                "open_now": False
-            }
+                "open_now": False,
+            },
         ],
         "total_results": 3,
-        "search_criteria": {"location": location, "cuisine": cuisine}
+        "search_criteria": {"location": location, "cuisine": cuisine},
     }
 
 
@@ -666,12 +783,17 @@ def get_restaurant_details(args):
         "hours": {
             "monday_friday": "11:00 AM - 11:00 PM",
             "saturday": "10:00 AM - 12:00 AM",
-            "sunday": "10:00 AM - 10:00 PM"
+            "sunday": "10:00 AM - 10:00 PM",
         },
-        "features": ["Outdoor seating", "Private dining", "Full bar", "Live music on weekends"],
+        "features": [
+            "Outdoor seating",
+            "Private dining",
+            "Full bar",
+            "Live music on weekends",
+        ],
         "dress_code": "Smart casual",
         "reservations": "Recommended",
-        "parking": "Street parking available"
+        "parking": "Street parking available",
     }
 
 
@@ -684,22 +806,58 @@ def get_menu(args):
         "restaurant_name": "Bella Italia",
         "menu": {
             "appetizers": [
-                {"name": "Bruschetta", "price": 12.00, "description": "Toasted bread with tomatoes, garlic, and basil"},
-                {"name": "Calamari Fritti", "price": 15.00, "description": "Crispy fried calamari with marinara sauce"},
-                {"name": "Caprese Salad", "price": 14.00, "description": "Fresh mozzarella, tomatoes, and basil"}
+                {
+                    "name": "Bruschetta",
+                    "price": 12.00,
+                    "description": "Toasted bread with tomatoes, garlic, and basil",
+                },
+                {
+                    "name": "Calamari Fritti",
+                    "price": 15.00,
+                    "description": "Crispy fried calamari with marinara sauce",
+                },
+                {
+                    "name": "Caprese Salad",
+                    "price": 14.00,
+                    "description": "Fresh mozzarella, tomatoes, and basil",
+                },
             ],
             "main_courses": [
-                {"name": "Spaghetti Carbonara", "price": 22.00, "description": "Classic pasta with pancetta and egg"},
-                {"name": "Osso Buco", "price": 34.00, "description": "Braised veal shank with gremolata"},
-                {"name": "Margherita Pizza", "price": 18.00, "description": "San Marzano tomatoes, mozzarella, fresh basil"},
-                {"name": "Risotto ai Funghi", "price": 24.00, "description": "Arborio rice with wild mushrooms and truffle oil"}
+                {
+                    "name": "Spaghetti Carbonara",
+                    "price": 22.00,
+                    "description": "Classic pasta with pancetta and egg",
+                },
+                {
+                    "name": "Osso Buco",
+                    "price": 34.00,
+                    "description": "Braised veal shank with gremolata",
+                },
+                {
+                    "name": "Margherita Pizza",
+                    "price": 18.00,
+                    "description": "San Marzano tomatoes, mozzarella, fresh basil",
+                },
+                {
+                    "name": "Risotto ai Funghi",
+                    "price": 24.00,
+                    "description": "Arborio rice with wild mushrooms and truffle oil",
+                },
             ],
             "desserts": [
-                {"name": "Tiramisu", "price": 12.00, "description": "Classic Italian coffee-flavored dessert"},
-                {"name": "Panna Cotta", "price": 10.00, "description": "Vanilla cream with berry compote"}
-            ]
+                {
+                    "name": "Tiramisu",
+                    "price": 12.00,
+                    "description": "Classic Italian coffee-flavored dessert",
+                },
+                {
+                    "name": "Panna Cotta",
+                    "price": 10.00,
+                    "description": "Vanilla cream with berry compote",
+                },
+            ],
         },
-        "currency": "USD"
+        "currency": "USD",
     }
 
 
@@ -719,7 +877,7 @@ def check_reservations(args):
         "available": True,
         "available_times": ["18:30", "19:00", "19:30", "20:00", "20:30"],
         "estimated_wait": "No wait with reservation",
-        "special_notes": "Window table available for parties of 2"
+        "special_notes": "Window table available for parties of 2",
     }
 
 
@@ -738,30 +896,37 @@ def get_restaurant_reviews(args):
                 "rating": 5,
                 "date": "2025-02-28",
                 "comment": "Absolutely fantastic! The carbonara was the best I've had outside of Rome.",
-                "helpful_votes": 24
+                "helpful_votes": 24,
             },
             {
                 "reviewer": "Sarah M.",
                 "rating": 4,
                 "date": "2025-02-25",
                 "comment": "Great food and atmosphere. Service was a bit slow during peak hours.",
-                "helpful_votes": 18
+                "helpful_votes": 18,
             },
             {
                 "reviewer": "Michael R.",
                 "rating": 5,
                 "date": "2025-02-20",
                 "comment": "The tiramisu is to die for. Romantic setting perfect for date night.",
-                "helpful_votes": 31
-            }
+                "helpful_votes": 31,
+            },
         ],
-        "rating_breakdown": {"5_star": 892, "4_star": 421, "3_star": 142, "2_star": 48, "1_star": 20}
+        "rating_breakdown": {
+            "5_star": 892,
+            "4_star": 421,
+            "3_star": 142,
+            "2_star": 48,
+            "1_star": 20,
+        },
     }
 
 
 # =============================================================================
 # CURRENCY DOMAIN (3 tools)
 # =============================================================================
+
 
 def convert_currency(args):
     """Convert an amount from one currency to another."""
@@ -789,7 +954,7 @@ def convert_currency(args):
         "to": {"currency": to_currency, "amount": converted_amount},
         "exchange_rate": rate,
         "last_updated": "2025-03-10T12:00:00Z",
-        "source": "Market rate (demo data)"
+        "source": "Market rate (demo data)",
     }
 
 
@@ -809,10 +974,10 @@ def get_exchange_rates(args):
             "CNY": 7.24,
             "INR": 83.10,
             "MXN": 17.15,
-            "BRL": 4.97
+            "BRL": 4.97,
         },
         "last_updated": "2025-03-10T12:00:00Z",
-        "source": "Demo exchange rates"
+        "source": "Demo exchange rates",
     }
 
 
@@ -830,15 +995,16 @@ def get_supported_currencies(args):
             {"code": "CNY", "name": "Chinese Yuan", "symbol": "\u00a5"},
             {"code": "INR", "name": "Indian Rupee", "symbol": "\u20b9"},
             {"code": "MXN", "name": "Mexican Peso", "symbol": "MX$"},
-            {"code": "BRL", "name": "Brazilian Real", "symbol": "R$"}
+            {"code": "BRL", "name": "Brazilian Real", "symbol": "R$"},
         ],
-        "total": 11
+        "total": 11,
     }
 
 
 # =============================================================================
 # LOYALTY DOMAIN (3 tools)
 # =============================================================================
+
 
 def get_loyalty_balance(args):
     """Get loyalty program points balance for a member."""
@@ -850,13 +1016,32 @@ def get_loyalty_balance(args):
         "program": program,
         "points_balance": 47500,
         "tier": "Gold",
-        "tier_progress": {"current": 47500, "next_tier": 75000, "next_tier_name": "Platinum"},
+        "tier_progress": {
+            "current": 47500,
+            "next_tier": 75000,
+            "next_tier_name": "Platinum",
+        },
         "points_expiring_soon": {"amount": 5000, "expiry_date": "2025-06-30"},
         "recent_activity": [
-            {"date": "2025-03-01", "description": "Flight SFO-JFK", "points": 2500, "type": "earned"},
-            {"date": "2025-02-15", "description": "Hotel stay - Grand Central", "points": 1200, "type": "earned"},
-            {"date": "2025-02-10", "description": "Car rental redemption", "points": -3000, "type": "redeemed"}
-        ]
+            {
+                "date": "2025-03-01",
+                "description": "Flight SFO-JFK",
+                "points": 2500,
+                "type": "earned",
+            },
+            {
+                "date": "2025-02-15",
+                "description": "Hotel stay - Grand Central",
+                "points": 1200,
+                "type": "earned",
+            },
+            {
+                "date": "2025-02-10",
+                "description": "Car rental redemption",
+                "points": -3000,
+                "type": "redeemed",
+            },
+        ],
     }
 
 
@@ -867,10 +1052,22 @@ def redeem_points(args):
     reward_type = args.get("reward_type", "flight_discount")
 
     redemption_values = {
-        "flight_discount": {"value": points * 0.01, "description": f"${points * 0.01:.2f} off your next flight"},
-        "hotel_night": {"value": points * 0.008, "description": f"${points * 0.008:.2f} hotel credit"},
-        "car_rental": {"value": points * 0.007, "description": f"${points * 0.007:.2f} rental credit"},
-        "gift_card": {"value": points * 0.005, "description": f"${points * 0.005:.2f} gift card"}
+        "flight_discount": {
+            "value": points * 0.01,
+            "description": f"${points * 0.01:.2f} off your next flight",
+        },
+        "hotel_night": {
+            "value": points * 0.008,
+            "description": f"${points * 0.008:.2f} hotel credit",
+        },
+        "car_rental": {
+            "value": points * 0.007,
+            "description": f"${points * 0.007:.2f} rental credit",
+        },
+        "gift_card": {
+            "value": points * 0.005,
+            "description": f"${points * 0.005:.2f} gift card",
+        },
     }
 
     reward = redemption_values.get(reward_type, redemption_values["flight_discount"])
@@ -883,10 +1080,10 @@ def redeem_points(args):
             "value": reward["value"],
             "description": reward["description"],
             "status": "confirmed",
-            "confirmation_code": "RDM-78901"
+            "confirmation_code": "RDM-78901",
         },
         "remaining_balance": 42500,
-        "currency": "USD"
+        "currency": "USD",
     }
 
 
@@ -897,19 +1094,50 @@ def get_loyalty_program_info(args):
     return {
         "program": program,
         "tiers": [
-            {"name": "Silver", "min_points": 0, "benefits": ["Basic earning rate", "Member-only fares"]},
-            {"name": "Gold", "min_points": 25000, "benefits": ["1.5x earning rate", "Priority boarding", "Lounge access"]},
-            {"name": "Platinum", "min_points": 75000, "benefits": ["2x earning rate", "Free upgrades", "Companion pass"]},
-            {"name": "Diamond", "min_points": 150000, "benefits": ["3x earning rate", "All Platinum benefits", "Personal concierge"]}
+            {
+                "name": "Silver",
+                "min_points": 0,
+                "benefits": ["Basic earning rate", "Member-only fares"],
+            },
+            {
+                "name": "Gold",
+                "min_points": 25000,
+                "benefits": ["1.5x earning rate", "Priority boarding", "Lounge access"],
+            },
+            {
+                "name": "Platinum",
+                "min_points": 75000,
+                "benefits": ["2x earning rate", "Free upgrades", "Companion pass"],
+            },
+            {
+                "name": "Diamond",
+                "min_points": 150000,
+                "benefits": [
+                    "3x earning rate",
+                    "All Platinum benefits",
+                    "Personal concierge",
+                ],
+            },
         ],
         "earning_rates": {
             "flights": "1 point per $1 spent",
             "hotels": "2 points per $1 spent",
             "car_rentals": "1 point per $2 spent",
-            "dining": "3 points per $1 spent"
+            "dining": "3 points per $1 spent",
         },
-        "redemption_options": ["Flight discounts", "Hotel nights", "Car rental credits", "Gift cards", "Experience packages"],
-        "partners": ["SkyWest Airlines", "Grand Central Hotels", "National Car Rental", "Bella Italia Restaurant Group"]
+        "redemption_options": [
+            "Flight discounts",
+            "Hotel nights",
+            "Car rental credits",
+            "Gift cards",
+            "Experience packages",
+        ],
+        "partners": [
+            "SkyWest Airlines",
+            "Grand Central Hotels",
+            "National Car Rental",
+            "Bella Italia Restaurant Group",
+        ],
     }
 
 
@@ -917,26 +1145,69 @@ def get_loyalty_program_info(args):
 # WEATHER DOMAIN (2 tools)
 # =============================================================================
 
+
 def get_weather_forecast(args):
     """Get weather forecast for a location."""
     location = args.get("location", "New York")
     days = args.get("days", 5)
 
     forecast_data = [
-        {"date": "2025-03-15", "high_f": 55, "low_f": 42, "condition": "Partly Cloudy", "precipitation": "10%"},
-        {"date": "2025-03-16", "high_f": 58, "low_f": 45, "condition": "Sunny", "precipitation": "0%"},
-        {"date": "2025-03-17", "high_f": 52, "low_f": 38, "condition": "Rain", "precipitation": "80%"},
-        {"date": "2025-03-18", "high_f": 50, "low_f": 36, "condition": "Cloudy", "precipitation": "30%"},
-        {"date": "2025-03-19", "high_f": 60, "low_f": 44, "condition": "Sunny", "precipitation": "5%"},
-        {"date": "2025-03-20", "high_f": 62, "low_f": 46, "condition": "Partly Cloudy", "precipitation": "15%"},
-        {"date": "2025-03-21", "high_f": 57, "low_f": 41, "condition": "Overcast", "precipitation": "25%"}
+        {
+            "date": "2025-03-15",
+            "high_f": 55,
+            "low_f": 42,
+            "condition": "Partly Cloudy",
+            "precipitation": "10%",
+        },
+        {
+            "date": "2025-03-16",
+            "high_f": 58,
+            "low_f": 45,
+            "condition": "Sunny",
+            "precipitation": "0%",
+        },
+        {
+            "date": "2025-03-17",
+            "high_f": 52,
+            "low_f": 38,
+            "condition": "Rain",
+            "precipitation": "80%",
+        },
+        {
+            "date": "2025-03-18",
+            "high_f": 50,
+            "low_f": 36,
+            "condition": "Cloudy",
+            "precipitation": "30%",
+        },
+        {
+            "date": "2025-03-19",
+            "high_f": 60,
+            "low_f": 44,
+            "condition": "Sunny",
+            "precipitation": "5%",
+        },
+        {
+            "date": "2025-03-20",
+            "high_f": 62,
+            "low_f": 46,
+            "condition": "Partly Cloudy",
+            "precipitation": "15%",
+        },
+        {
+            "date": "2025-03-21",
+            "high_f": 57,
+            "low_f": 41,
+            "condition": "Overcast",
+            "precipitation": "25%",
+        },
     ]
 
     return {
         "location": location,
         "forecast": forecast_data[:days],
         "units": "Fahrenheit",
-        "source": "Demo weather data"
+        "source": "Demo weather data",
     }
 
 
@@ -953,17 +1224,18 @@ def get_current_weather(args):
             "humidity": "62%",
             "wind": {"speed_mph": 12, "direction": "NW"},
             "visibility_miles": 10,
-            "uv_index": 3
+            "uv_index": 3,
         },
         "updated_at": "2025-03-15T10:30:00Z",
         "units": "Fahrenheit",
-        "source": "Demo weather data"
+        "source": "Demo weather data",
     }
 
 
 # =============================================================================
 # ACTIVITIES DOMAIN (3 tools)
 # =============================================================================
+
 
 def search_activities(args):
     """Search for activities and attractions in a location."""
@@ -980,7 +1252,7 @@ def search_activities(args):
                 "duration": "4 hours",
                 "price": 45.00,
                 "rating": 4.7,
-                "available": True
+                "available": True,
             },
             {
                 "activity_id": "AC-102",
@@ -990,7 +1262,7 @@ def search_activities(args):
                 "duration": "2.5 hours",
                 "price": 35.00,
                 "rating": 4.5,
-                "available": True
+                "available": True,
             },
             {
                 "activity_id": "AC-103",
@@ -1000,7 +1272,7 @@ def search_activities(args):
                 "duration": "2.5 hours",
                 "price": 125.00,
                 "rating": 4.9,
-                "available": True
+                "available": True,
             },
             {
                 "activity_id": "AC-104",
@@ -1010,12 +1282,12 @@ def search_activities(args):
                 "duration": "3 hours",
                 "price": 65.00,
                 "rating": 4.6,
-                "available": True
-            }
+                "available": True,
+            },
         ],
         "total_results": 4,
         "search_criteria": {"location": location, "category": category},
-        "currency": "USD"
+        "currency": "USD",
     }
 
 
@@ -1038,7 +1310,7 @@ def get_activity_details(args):
         "meeting_point": "Castle Clinton, Battery Park",
         "rating": 4.7,
         "total_reviews": 3420,
-        "currency": "USD"
+        "currency": "USD",
     }
 
 
@@ -1057,16 +1329,17 @@ def check_activity_availability(args):
             {"time": "9:00 AM", "spots_remaining": 15},
             {"time": "10:30 AM", "spots_remaining": 8},
             {"time": "12:00 PM", "spots_remaining": 22},
-            {"time": "1:30 PM", "spots_remaining": 30}
+            {"time": "1:30 PM", "spots_remaining": 30},
         ],
         "total_price": 45.00 * participants,
-        "currency": "USD"
+        "currency": "USD",
     }
 
 
 # =============================================================================
 # TRIP PLANNING DOMAIN (2 tools)
 # =============================================================================
+
 
 def create_itinerary(args):
     """Create a trip itinerary based on destination and preferences."""
@@ -1081,36 +1354,96 @@ def create_itinerary(args):
                 "day": 1,
                 "theme": "Iconic Landmarks",
                 "activities": [
-                    {"time": "9:00 AM", "activity": "Statue of Liberty & Ellis Island", "duration": "4 hours"},
-                    {"time": "1:30 PM", "activity": "Lunch at Battery Park area", "duration": "1 hour"},
-                    {"time": "3:00 PM", "activity": "9/11 Memorial & Museum", "duration": "2 hours"},
-                    {"time": "6:00 PM", "activity": "Dinner in Tribeca", "duration": "1.5 hours"},
-                    {"time": "8:00 PM", "activity": "Brooklyn Bridge walk at sunset", "duration": "1 hour"}
-                ]
+                    {
+                        "time": "9:00 AM",
+                        "activity": "Statue of Liberty & Ellis Island",
+                        "duration": "4 hours",
+                    },
+                    {
+                        "time": "1:30 PM",
+                        "activity": "Lunch at Battery Park area",
+                        "duration": "1 hour",
+                    },
+                    {
+                        "time": "3:00 PM",
+                        "activity": "9/11 Memorial & Museum",
+                        "duration": "2 hours",
+                    },
+                    {
+                        "time": "6:00 PM",
+                        "activity": "Dinner in Tribeca",
+                        "duration": "1.5 hours",
+                    },
+                    {
+                        "time": "8:00 PM",
+                        "activity": "Brooklyn Bridge walk at sunset",
+                        "duration": "1 hour",
+                    },
+                ],
             },
             {
                 "day": 2,
                 "theme": "Culture & Entertainment",
                 "activities": [
-                    {"time": "9:00 AM", "activity": "Metropolitan Museum of Art", "duration": "3 hours"},
-                    {"time": "12:30 PM", "activity": "Lunch on Museum Mile", "duration": "1 hour"},
-                    {"time": "2:00 PM", "activity": "Central Park walking tour", "duration": "2 hours"},
-                    {"time": "5:00 PM", "activity": "Times Square exploration", "duration": "1.5 hours"},
-                    {"time": "7:30 PM", "activity": "Broadway show", "duration": "2.5 hours"}
-                ]
+                    {
+                        "time": "9:00 AM",
+                        "activity": "Metropolitan Museum of Art",
+                        "duration": "3 hours",
+                    },
+                    {
+                        "time": "12:30 PM",
+                        "activity": "Lunch on Museum Mile",
+                        "duration": "1 hour",
+                    },
+                    {
+                        "time": "2:00 PM",
+                        "activity": "Central Park walking tour",
+                        "duration": "2 hours",
+                    },
+                    {
+                        "time": "5:00 PM",
+                        "activity": "Times Square exploration",
+                        "duration": "1.5 hours",
+                    },
+                    {
+                        "time": "7:30 PM",
+                        "activity": "Broadway show",
+                        "duration": "2.5 hours",
+                    },
+                ],
             },
             {
                 "day": 3,
                 "theme": "Food & Neighborhoods",
                 "activities": [
-                    {"time": "9:00 AM", "activity": "Chelsea Market food tour", "duration": "2 hours"},
-                    {"time": "11:30 AM", "activity": "High Line walk", "duration": "1.5 hours"},
-                    {"time": "1:30 PM", "activity": "Lunch in Greenwich Village", "duration": "1 hour"},
-                    {"time": "3:00 PM", "activity": "SoHo shopping", "duration": "2 hours"},
-                    {"time": "6:00 PM", "activity": "Farewell dinner in Little Italy", "duration": "2 hours"}
-                ]
-            }
-        ]
+                    {
+                        "time": "9:00 AM",
+                        "activity": "Chelsea Market food tour",
+                        "duration": "2 hours",
+                    },
+                    {
+                        "time": "11:30 AM",
+                        "activity": "High Line walk",
+                        "duration": "1.5 hours",
+                    },
+                    {
+                        "time": "1:30 PM",
+                        "activity": "Lunch in Greenwich Village",
+                        "duration": "1 hour",
+                    },
+                    {
+                        "time": "3:00 PM",
+                        "activity": "SoHo shopping",
+                        "duration": "2 hours",
+                    },
+                    {
+                        "time": "6:00 PM",
+                        "activity": "Farewell dinner in Little Italy",
+                        "duration": "2 hours",
+                    },
+                ],
+            },
+        ],
     }
 
     # Trim to requested days
@@ -1121,9 +1454,9 @@ def create_itinerary(args):
         "tips": [
             "Get a MetroCard for unlimited subway rides",
             "Book Broadway tickets in advance for best prices",
-            "Wear comfortable walking shoes — NYC is best explored on foot"
+            "Wear comfortable walking shoes — NYC is best explored on foot",
         ],
-        "estimated_budget": {"low": 150 * days, "high": 350 * days, "currency": "USD"}
+        "estimated_budget": {"low": 150 * days, "high": 350 * days, "currency": "USD"},
     }
 
 
@@ -1139,32 +1472,38 @@ def get_travel_tips(args):
                 "Get a 7-day unlimited MetroCard ($33) for subway and bus travel",
                 "Many museums offer 'pay what you wish' hours",
                 "Tipping is expected: 18-20% at restaurants, $1-2 per drink at bars",
-                "Download offline maps — cell service can be spotty underground"
+                "Download offline maps — cell service can be spotty underground",
             ],
             "safety": [
                 "NYC is generally safe for tourists, but stay aware of your surroundings",
                 "Keep valuables secure in crowded areas like Times Square and subway",
                 "Stick to well-lit streets at night",
-                "Use official yellow cabs or ride-sharing apps"
+                "Use official yellow cabs or ride-sharing apps",
             ],
             "budget": [
                 "Free attractions: Central Park, Brooklyn Bridge, Staten Island Ferry, High Line",
                 "Eat at food trucks and delis for affordable meals ($8-12)",
                 "TKTS booth in Times Square offers same-day Broadway tickets at 20-50% off",
-                "Happy hour deals at restaurants typically run 4-7 PM"
+                "Happy hour deals at restaurants typically run 4-7 PM",
             ],
             "packing": [
                 "Layers are key — weather can change quickly",
                 "Comfortable walking shoes are essential (expect 10-15k steps/day)",
                 "Compact umbrella for unexpected rain",
-                "Portable phone charger for navigation and photos"
-            ]
+                "Portable phone charger for navigation and photos",
+            ],
         },
         "local_phrases": [
             {"phrase": "How do I get to...?", "context": "Asking for directions"},
-            {"phrase": "What's good here?", "context": "Asking restaurant staff for recommendations"},
-            {"phrase": "Can I get the check?", "context": "Requesting the bill at a restaurant"}
-        ]
+            {
+                "phrase": "What's good here?",
+                "context": "Asking restaurant staff for recommendations",
+            },
+            {
+                "phrase": "Can I get the check?",
+                "context": "Requesting the bill at a restaurant",
+            },
+        ],
     }
 
     return tips

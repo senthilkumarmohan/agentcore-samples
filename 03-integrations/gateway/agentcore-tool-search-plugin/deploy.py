@@ -37,7 +37,9 @@ def deploy():
 
     iam = boto3.client("iam", region_name=AWS_REGION)
     lambda_client = boto3.client("lambda", region_name=AWS_REGION)
-    agentcore_control = boto3.client("bedrock-agentcore-control", region_name=AWS_REGION)
+    agentcore_control = boto3.client(
+        "bedrock-agentcore-control", region_name=AWS_REGION
+    )
 
     # --- Create Lambda execution role ---
     print("=" * 60)
@@ -152,7 +154,9 @@ def deploy():
         print(f"  [OK] Created gateway role: {GATEWAY_ROLE_NAME}")
         time.sleep(10)
     except iam.exceptions.EntityAlreadyExistsException:
-        gateway_role_arn = f"arn:aws:iam::{identity['Account']}:role/{GATEWAY_ROLE_NAME}"
+        gateway_role_arn = (
+            f"arn:aws:iam::{identity['Account']}:role/{GATEWAY_ROLE_NAME}"
+        )
         print(f"  [INFO] Gateway role already exists: {GATEWAY_ROLE_NAME}")
 
     try:
@@ -173,7 +177,9 @@ def deploy():
             for gw in gateways.get("items", []):
                 if gw.get("name") == GATEWAY_NAME:
                     gateway_id = gw["gatewayId"]
-                    gw_detail = agentcore_control.get_gateway(gatewayIdentifier=gateway_id)
+                    gw_detail = agentcore_control.get_gateway(
+                        gatewayIdentifier=gateway_id
+                    )
                     gateway_endpoint = gw_detail["gatewayUrl"]
                     break
             print(f"  [INFO] Gateway already exists: {GATEWAY_NAME}")

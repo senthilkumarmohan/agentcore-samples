@@ -35,7 +35,9 @@ def cleanup():
 
     iam = boto3.client("iam", region_name=AWS_REGION)
     lambda_client = boto3.client("lambda", region_name=AWS_REGION)
-    agentcore_control = boto3.client("bedrock-agentcore-control", region_name=AWS_REGION)
+    agentcore_control = boto3.client(
+        "bedrock-agentcore-control", region_name=AWS_REGION
+    )
     gateway_id = state["gateway_id"]
 
     # Deregister tool targets
